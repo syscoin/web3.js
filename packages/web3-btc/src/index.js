@@ -347,7 +347,7 @@ var Btc = function Btc() {
                             // wait for some time before fireing the FALSE
                             clearTimeout(this._isSyncingTimeout);
                             this._isSyncingTimeout = setTimeout(function () {
-                                if(output.currentBlock > output.highestBlock - 200) {
+                                if(output.verificationProgress >= 1) {
                                     _this._isSyncing = false;
                                     _this.emit('changed', _this._isSyncing);
 
