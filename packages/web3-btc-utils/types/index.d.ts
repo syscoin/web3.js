@@ -39,14 +39,14 @@ export type Mixed =
 export type Hex = string | number;
 
 // utils types
-export function isAddress(address: string): boolean;
+export function isAddress(address: string, network: any): boolean;
 export function fromSatoshi(value: string | BN): string;
 export function toSatoshi(val: BN): BN;
 export function toSatoshi(val: string): string;
 
 // interfaces
 export interface Utils {
-    isAddress(address: string): boolean;
+    isAddress(address: string, network: any): boolean;
     fromSatoshi(value: string | BN): string;
     toSatoshi(val: BN): BN;
     toSatoshi(val: string): string;

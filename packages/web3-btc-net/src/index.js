@@ -24,8 +24,7 @@
 
 var core = require('web3-core');
 var Method = require('web3-core-method');
-var utils = require('web3-btc-utils');
-
+var helpers = require('web3-btc-core-helpers');
 
 var Net = function () {
     var _this = this;
@@ -39,13 +38,13 @@ var Net = function () {
             name: 'getId',
             call: 'getblockchaininfo',
             params: 0,
-            outputFormatter: outputChainIdFormatter
+            outputFormatter: helpers.formatters.outputChainIdFormatter
         }),
         new Method({
             name: 'isListening',
             call: 'getconnectioncount',
             params: 0,
-            outputFormatter: outputIsListeningFormatter
+            outputFormatter: helpers.formatters.outputIsListeningFormatter
         }),
         new Method({
             name: 'getPeerCount',

@@ -20,13 +20,15 @@
 import * as net from 'net';
 
 export class formatters {
-    static outputBigNumberFormatter(number: number): number;
-
-    static inputAddressFormatter(address: string): string;
 
     static outputChainIdFormatter(blockchaininfo: any): number;
 
     static outputIsListeningFormatter(connectioncount: number): boolean;
+    static outputSyncingFormatter(blockchaininfo: any): any;
+    static outputNodeInfoFormatter(networkinfo: any): string;
+    static outputProtocolVersionFormatter(networkinfo: any): number;
+    static outputHashrateFormatter(mininginfo: any): string;
+
 }
 
 export class errors {

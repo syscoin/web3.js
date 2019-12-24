@@ -25,10 +25,11 @@
 
 var _ = require('underscore');
 var core = require('web3-core');
-var helpers = require('web3-core-helpers');
+var helpers = require('web3-btc-core-helpers');
+var helpersEth = require('web3-core-helpers');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 var Method = require('web3-core-method');
-var utils = require('web3-utils');
+var utils = require('web3-btc-utils');
 var Net = require('web3-btc-net');
 
 var Personal = require('web3-btc-personal');
@@ -36,6 +37,7 @@ var Accounts = require('web3-btc-accounts');
 
 var getNetworkType = require('./getNetworkType.js');
 var formatter = helpers.formatters;
+var formatterEth = helpersEth.formatters;
 
 
 var Btc = function Btc() {
@@ -50,10 +52,9 @@ var Btc = function Btc() {
         _this.net.setProvider.apply(_this, arguments);
         _this.personal.setProvider.apply(_this, arguments);
         _this.accounts.setProvider.apply(_this, arguments);
-        _this.utils.setNetwork(arguments);
     };
 
-
+    var network = arguments[2];
     var defaultAccount = null;
     var defaultBlock = 'latest';
     var transactionBlockTimeout = 50;
@@ -135,8 +136,8 @@ var Btc = function Btc() {
             return defaultAccount;
         },
         set: function (val) {
-            if(val) {
-                defaultAccount = utils.toChecksumAddress(formatter.inputAddressFormatter(val));
+            if(val && utils.isAddress(val, _this.network)) {
+                defaultAccount = val;
             }
 
             _this.personal.defaultAccount = defaultAccount;
@@ -211,18 +212,16 @@ var Btc = function Btc() {
 
     var methods = [
         new Method({
-            name: 'getblockchaininfo',
-            call: 'getblockchaininfo'
-        }),
-        new Method({
-            name: 'getnetworkinfo',
+            name: 'getNodeInfo',
             call: 'getnetworkinfo',
-            params: 0
+            params: 0,
+            outputFormatter: formatter.outputNodeInfoFormatter
         }),
         new Method({
-            name: 'getmininginfo',
-            call: 'getmininginfo',
-            params: 0
+            name: 'getProtocolVersion',
+            call: 'getnetworkinfo',
+            params: 0,
+            outputFormatter: formatter.outputProtocolVersionFormatter
         }),
         new Method({
             name: 'getAccounts',
@@ -230,16 +229,34 @@ var Btc = function Btc() {
             params: 0
         }),
         new Method({
-            name: 'getblockcount',
+            name: 'getBlockNumber',
             call: 'getblockcount',
             params: 0
         }),
         new Method({
-            name: 'addressbalance',
+            name: 'isSyncing',
+            call: 'getblockchaininfo',
+            params: 0,
+            outputFormatter: formatter.outputSyncingFormatter
+        }),
+        new Method({
+            name: 'getHashrate',
+            call: 'getmininginfo',
+            params: 0,
+            outputFormatter: formatter.outputHashrateFormatter
+        }),
+        new Method({
+            name: 'getBalance',
             call: 'addressbalance',
             params: 1,
-            inputFormatter: [formatter.inputAddressFormatter],
-            outputFormatter: formatter.outputBigNumberFormatter
+            inputFormatter: [function(address) {
+                if (utils.isAddress(address, _this.network)) {
+                    return address;
+                } else {
+                    throw new Error('Address ' + address + ' is not a valid address to get "addressbalance".');
+                }
+            }],
+            outputFormatter: formatterEth.outputBigNumberFormatter
         }),
         new Method({
             name: 'getBlock',
@@ -275,13 +292,19 @@ var Btc = function Btc() {
             name: 'sign',
             call: 'signrawtransactionwithkey',
             params: 2,
-            inputFormatter: [null, formatter.inputAddressFormatter]
+            inputFormatter: [null, function(address) {
+                if (utils.isAddress(address, _this.network)) {
+                    return address;
+                } else {
+                    throw new Error('Address ' + address + ' is not a valid address to sign.');
+                }
+            }]
         }),
 
         // subscriptions
         new Subscriptions({
             name: 'subscribe',
-            type: 'eth',
+            type: 'btc',
             subscriptions: {
                 'newBlockHeaders': {
                     // TODO rename on RPC side?

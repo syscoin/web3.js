@@ -20,11 +20,6 @@
  * @date 2017
  */
 import * as bitcoin from 'bitcoinjs';
-var network = bitcoin.networks.bitcoin;
-
-var setNetwork = function (arguments) {
-    network = arguments[1] || network;
-};
 /**
  * Checks if the given string is an address
  *
@@ -32,7 +27,7 @@ var setNetwork = function (arguments) {
  * @param {String} address the given HEX address
  * @return {Boolean}
  */
-var isAddress = function (address) {
+var isAddress = function (address, network) {
     try{
         bitcoin.address.toOutputScript(address, network);
     } catch (error) {
@@ -44,6 +39,5 @@ var isAddress = function (address) {
 
 
 module.exports = {
-    isAddress: isAddress,
-    setNetwork: setNetwork
+    isAddress: isAddress
 };

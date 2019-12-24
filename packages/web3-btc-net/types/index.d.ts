@@ -17,6 +17,6 @@
  * @date 2018
  */
 
-import { NetworkBase } from 'web3-core';
+import { NetworkBase } from 'web3-btc-core';
 
 export class Network extends NetworkBase {}

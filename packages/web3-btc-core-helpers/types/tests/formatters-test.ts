@@ -25,8 +25,6 @@ formatters.outputBigNumberFormatter(100);
 // $ExpectType string
 formatters.inputSignFormatter('0x0');
 
-// $ExpectType string
-formatters.inputAddressFormatter('0x0');
 
 // $ExpectType boolean
 formatters.isPredefinedBlockNumber('latest');

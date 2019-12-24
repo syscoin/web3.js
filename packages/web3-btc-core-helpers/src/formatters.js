@@ -24,24 +24,7 @@
 "use strict";
 
 var _ = require('underscore');
-var utils = require('web3-btc-utils');
-
-
-
-/**
- * Should the format output to a big number
- *
- * @method outputBigNumberFormatter
- *
- * @param {String|Number|BigNumber|BN} number
- *
- * @returns {BN} object
- */
-var outputBigNumberFormatter = function (number) {
-    return utils.toBN(number).toString(10);
-};
-
-
+var utils = require('web3-utils');
 var outputChainIdFormatter = function (blockchaininfo) {
     if(blockchaininfo.chain === 'main'){
         return 1;
@@ -58,20 +41,31 @@ var outputIsListeningFormatter = function (connectioncount) {
     return connectioncount > 0;
 };
 
+var outputSyncingFormatter = function (result) {
+    var syncing = {};
+    syncing.currentBlock = result.blocks;
+    syncing.verificationProgress = result.verificationprogress;
+    return syncing;
+};
+var outputNodeInfoFormatter = function (result) {
+    return result.subversion;
+};
+var outputProtocolVersionFormatter = function (result) {
+    return result.protocolversion;
+};
 
-var inputAddressFormatter = function (address) {
-    if (utils.isAddress(address)) {
-        return address;
-    }
-    throw new Error('Provided address "' + address + '" is invalid, the capitalization checksum test failed, or its an indrect IBAN address which can\'t be converted.');
+var outputHashrateFormatter = function (result) {
+    return utils.toBN(result.networkhashps).toString(10);
 };
 
 
 
 module.exports = {
-    inputAddressFormatter: inputAddressFormatter,
     outputChainIdFormatter: outputChainIdFormatter,
-    outputBigNumberFormatter: outputBigNumberFormatter,
-    outputIsListeningFormatter: outputIsListeningFormatter
+    outputIsListeningFormatter: outputIsListeningFormatter,
+    outputSyncingFormatter: outputSyncingFormatter,
+    outputNodeInfoFormatter: outputNodeInfoFormatter,
+    outputProtocolVersionFormatter: outputProtocolVersionFormatter,
+    outputHashrateFormatter: outputHashrateFormatter
 };
 

@@ -24,7 +24,7 @@
 
 var _ = require('underscore');
 var utils = require('./utils.js');
-
+var SATOSHI = 100000000;
 
 
 /**
