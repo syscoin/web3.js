@@ -54,7 +54,7 @@ var Btc = function Btc() {
         _this.accounts.setProvider.apply(_this, arguments);
     };
 
-    var network = arguments[2];
+    var network = arguments[1];
     var defaultAccount = null;
     var defaultBlock = 'latest';
     var transactionBlockTimeout = 50;
