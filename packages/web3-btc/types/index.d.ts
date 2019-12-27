@@ -26,12 +26,10 @@ import {
     PromiEvent,
     provider,
     Providers,
-    Transaction,
-    TransactionConfig,
     Common,
     chain,
     BlockNumber
-} from 'web3-core';
+} from 'web3-btc-core';
 import {Subscription} from 'web3-core-subscriptions';
 import {Accounts} from 'web3-btc-accounts';
 import {Personal} from 'web3-btc-personal';
@@ -40,11 +38,9 @@ import {BigNumber} from 'bignumber.js';
 import BN = require('bn.js');
 
 export {
-    TransactionConfig,
-    Transaction,
     Common,
     chain
-} from 'web3-core';
+} from 'web3-btc-core';
 
 export class Btc {
     constructor();
@@ -81,8 +77,8 @@ export class Btc {
     ): Subscription<Syncing>;
     subscribe(
         type: 'newBlockHeaders',
-        callback?: (error: Error, blockHeader: BlockHeader) => void
-    ): Subscription<BlockHeader>;
+        callback?: (error: Error, blockHeader: string) => void
+    ): Subscription<string>;
     subscribe(
         type: 'pendingTransactions',
         callback?: (error: Error, transactionHash: string) => void
@@ -120,36 +116,27 @@ export class Btc {
         callback?: (error: Error, balance: string) => void
     ): Promise<string>;
 
-    getBlock(blockHashOrBlockNumber: BlockNumber | string): Promise<BlockTransactionString>;
+    getBlock(blockHash: string): Promise<string>;
     getBlock(
-        blockHashOrBlockNumber: BlockNumber | string,
-        returnTransactionObjects: true
-    ): Promise<BlockTransactionObject>;
-    getBlock(
-        blockHashOrBlockNumber: BlockNumber | string,
-        callback?: (error: Error, block: BlockTransactionString) => void
-    ): Promise<BlockTransactionString>;
-    getBlock(
-        blockHashOrBlockNumber: BlockNumber | string,
-        returnTransactionObjects: true,
-        callback?: (error: Error, block: BlockTransactionObject) => void
-    ): Promise<BlockTransactionObject>;
+        blockHash: string,
+        callback?: (error: Error, block: string) => void
+    ): Promise<string>;
 
 
     getTransaction(
         transactionHash: string,
-        callback?: (error: Error, transaction: Transaction) => void
-    ): Promise<Transaction>;
+        callback?: (error: Error, transaction: string) => void
+    ): Promise<string>;
 
     sendTransaction(
-        transactionConfig: TransactionConfig,
+        transaction: string,
         callback?: (error: Error, hash: string) => void
-    ): PromiEvent<Transaction>;
+    ): PromiEvent<string>;
 
     sendSignedTransaction(
         signedTransactionData: string,
         callback?: (error: Error, hash: string) => void
-    ): PromiEvent<Transaction>;
+    ): PromiEvent<string>;
 
     sign(
         dataToSign: string,
@@ -158,36 +145,36 @@ export class Btc {
     ): Promise<string>;
 
     signTransaction(
-        transactionConfig: TransactionConfig,
+        transaction: string,
         callback?: (
             error: Error,
-            signedTransaction: Transaction
+            signedTransaction: string
         ) => void
-    ): Promise<Transaction>;
+    ): Promise<string>;
     signTransaction(
-        transactionConfig: TransactionConfig,
+        transaction: string,
         address: string
-    ): Promise<Transaction>;
+    ): Promise<string>;
     signTransaction(
-        transactionConfig: TransactionConfig,
+        transaction: string,
         address: string,
         callback: (
             error: Error,
-            signedTransaction: Transaction
+            signedTransaction: string
         ) => void
-    ): Promise<Transaction>;
+    ): Promise<string>;
 
-    call(transactionConfig: TransactionConfig): Promise<string>;
+    call(transaction: string): Promise<string>;
     call(
-        transactionConfig: TransactionConfig,
+        transaction: string,
         defaultBlock?: BlockNumber
     ): Promise<string>;
     call(
-        transactionConfig: TransactionConfig,
+        transactionConfig: string,
         callback?: (error: Error, data: string) => void
     ): Promise<string>;
     call(
-        transactionConfig: TransactionConfig,
+        transactionConfig: string,
         defaultBlock: BlockNumber,
         callback: (error: Error, data: string) => void
     ): Promise<string>;
@@ -199,32 +186,4 @@ export class Btc {
 export interface Syncing {
     CurrentBlock: number;
     VerificationProgress: number;
-}
-
-export interface BlockHeader {
-    number: number;
-    hash: string;
-    parentHash: string;
-    nonce: string;
-    transactionRoot: string;
-    timestamp: number | string;
-}
-
-// TODO: This interface does exist to provide backwards-compatibility and can get removed on a minor release
-export interface Block extends BlockTransactionBase {
-    transactions: Transaction[] | string[];
-}
-
-export interface BlockTransactionBase extends BlockHeader {
-    size: number;
-    difficulty: number;
-    totalDifficulty: number;
-}
-
-export interface BlockTransactionObject extends BlockTransactionBase {
-    transactions: Transaction[];
-}
-
-export interface BlockTransactionString extends BlockTransactionBase {
-    transactions: string[];
 }

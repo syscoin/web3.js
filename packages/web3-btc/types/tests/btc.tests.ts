@@ -20,14 +20,7 @@
 
 import {Log} from 'web3-core';
 import {
-    BlockTransactionObject,
-    BlockTransactionString,
-    BlockHeader,
-    Syncing,
-    Transaction,
-    TransactionConfig,
-    Common,
-    chain
+    Syncing
 } from 'web3-eth';
 import BN = require('bn.js');
 import BigNumber from 'bignumber.js';
@@ -68,12 +61,6 @@ btc.transactionConfirmationBlocks;
 // $ExpectType number
 btc.transactionBlockTimeout;
 
-// $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => Contract
-btc.Contract;
-
-// $ExpectType new (iban: string) => Iban
-btc.Iban;
-
 // $ExpectType Personal
 btc.personal;
 
@@ -102,7 +89,7 @@ btc.subscribe('newBlockHeaders');
 // $ExpectType Subscription<BlockHeader>
 btc.subscribe(
     'newBlockHeaders',
-    (error: Error, blockHeader: BlockHeader) => {}
+    (error: Error, blockHeader: string) => {}
 );
 
 // $ExpectType Subscription<string>
@@ -151,48 +138,13 @@ btc.getBlockNumber((error: Error, blockNumber: number) => {});
 
 // $ExpectType Promise<string>
 btc.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
-// $ExpectType Promise<string>
-btc.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1', '1000');
-// $ExpectType Promise<string>
-btc.getBalance(
-    '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-    '1000',
-    (error: Error, balance: string) => {}
-);
-// $ExpectType Promise<string>
-btc.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1', 1000);
-// $ExpectType Promise<string>
-btc.getBalance(
-    '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-    1000,
-    (error: Error, balance: string) => {}
-);
 
-
-// $ExpectType Promise<BlockTransactionString>
-btc.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
-// $ExpectType Promise<BlockTransactionString>
-btc.getBlock(345);
-// $ExpectType Promise<BlockTransactionObject>
-btc.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', true);
-// $ExpectType Promise<BlockTransactionString>
-btc.getBlock(345);
-// $ExpectType Promise<BlockTransactionObject>
-btc.getBlock(345, true);
-// $ExpectType Promise<BlockTransactionString>
+// $ExpectType Promise<BlockHeader>
+btc.getBlock('52fe93c414037181113275211001f14b8931a2e30cdd2e0216a8c597e47ecf63');
+// $ExpectType Promise<BlockHeader>
 btc.getBlock(
-    '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-    (error: Error, block: BlockTransactionString) => {}
-);
-// $ExpectType Promise<BlockTransactionString>
-btc.getBlock(345, (error: Error, block: BlockTransactionString) => {});
-// $ExpectType Promise<BlockTransactionObject>
-btc.getBlock(345, true, (error: Error, block: BlockTransactionObject) => {});
-// $ExpectType Promise<BlockTransactionObject>
-btc.getBlock(
-    '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-    true,
-    (error: Error, block: BlockTransactionObject) => {}
+    '52fe93c414037181113275211001f14b8931a2e30cdd2e0216a8c597e47ecf63',
+    (error: Error, block: string) => {}
 );
 
 // $ExpectType Promise<Transaction>
@@ -200,11 +152,9 @@ btc.getTransaction('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
 // $ExpectType Promise<Transaction>
 btc.getTransaction(
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-    (error: Error, transaction: Transaction) => {}
+    (error: Error, transaction: string) => {}
 );
 
-
-const code = '603d80600c6000396000f3007c0';
 
 // $ExpectType PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 btc.sendTransaction({
@@ -272,7 +222,7 @@ btc.signTransaction(
         value: '1000000000000000000',
         data: ''
     },
-    (error: Error, signedTransaction: Transaction) => {}
+    (error: Error, signedTransaction: string) => {}
 );
 // $ExpectType Promise<RLPEncodedTransaction>
 btc.signTransaction(
@@ -285,11 +235,5 @@ btc.signTransaction(
         data: ''
     },
     '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
-    (error: Error, signedTransaction: Transaction) => {}
+    (error: Error, signedTransaction: string) => {}
 );
-
-// $ExpectType Promise<Transaction[]>
-btc.getPendingTransactions();
-
-// $ExpectType Promise<Transaction[]>
-btc.getPendingTransactions((error: Error, result: Transaction[]) => {});
